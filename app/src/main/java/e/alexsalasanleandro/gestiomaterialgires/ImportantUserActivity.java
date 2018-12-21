@@ -42,24 +42,7 @@ public class ImportantUserActivity extends AppCompatActivity {
         getSupportActionBar().setIcon( R.mipmap.ic_launcher );
 
         //Conectar amb firebase
-        db.collection("Comandas").whereEqualTo("entrega", false).addSnapshotListener(this, new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.e("GestioMaterialGIRES", "Firestore Error: " + e.toString());
-                    return;
-                }
-                list_prep.clear();
-                for (DocumentSnapshot doc : documentSnapshots) {
-                    comanda cprep = new comanda( doc.getString( "name" ),doc.getString( "usuari" ),doc.getString( "data" ) );
-                    cprep.setId(doc.getId());
-                    //comanda c = doc.toObject(comanda.class);
-                    //list_prep.add(c);
-                    list_prep.add(cprep);
-                }
-                adapterpre.notifyDataSetChanged();
-            }
-        });
+        refreshListPrep();
 
         db.collection( "Comandas" ).whereEqualTo( "entrega",true ).addSnapshotListener( this, new EventListener<QuerySnapshot>() {
             @Override
@@ -132,7 +115,7 @@ public class ImportantUserActivity extends AppCompatActivity {
                     Toast.makeText(ImportantUserActivity.this,"Posa un nom", Toast.LENGTH_SHORT).show();
 
                 }else {
-                list_prep.add(new comanda( name ));
+                //list_prep.add(new comanda( name ));
                 novacomanda(name);}
             }
         });
@@ -157,7 +140,8 @@ public class ImportantUserActivity extends AppCompatActivity {
                 if (resultCode==RESULT_OK){
                     String fecha = data.getStringExtra( "fecha" );
                     Toast.makeText(ImportantUserActivity.this,"Comanda creada", Toast.LENGTH_SHORT).show(); //Posar com a recurs
-                    list_prep.get( list_prep.size()-1 ).setData( fecha );
+                    refreshListPrep();
+                    //list_prep.get( list_prep.size()-1 ).setData( fecha );
                 }
                 break;
 
@@ -178,5 +162,27 @@ public class ImportantUserActivity extends AppCompatActivity {
         intent.putExtra("id", C.getId());
         intent.putExtra("name",C.getName());
         startActivityForResult(intent,COMANDA);
+    }
+    public void refreshListPrep (){
+
+        db.collection("Comandas").whereEqualTo("entrega", false).addSnapshotListener(this, new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.e("GestioMaterialGIRES", "Firestore Error: " + e.toString());
+                    return;
+                }
+                list_prep.clear();
+                for (DocumentSnapshot doc : documentSnapshots) {
+                    comanda cprep = new comanda( doc.getString( "name" ),doc.getString( "usuari" ),doc.getString( "data" ) );
+                    cprep.setId(doc.getId());
+                    //comanda c = doc.toObject(comanda.class);
+                    //list_prep.add(c);
+                    list_prep.add(cprep);
+                }
+                adapterpre.notifyDataSetChanged();
+            }
+        });
+
     }
 }
