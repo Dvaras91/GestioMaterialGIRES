@@ -2,8 +2,10 @@ package e.alexsalasanleandro.gestiomaterialgires;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -12,6 +14,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
@@ -153,8 +157,19 @@ public class EditCommand extends AppCompatActivity {
             batch.set(comRef.collection("items").document(), items);
         }
 
-        batch.commit(); // .addOnSuccessListener(), FALTA POSAR AIXO PERQUE SINO DONA UN ERROR AL TORNAR A ENTRAR
+        batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                finish();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(EditCommand.this,"Error!",Toast.LENGTH_SHORT).show();
+                Log.d("ERROR",e.toString());
+            }
+        }); //FALTA POSAR AIXO PERQUE SINO DONA UN ERROR AL TORNAR A ENTRAR
 
-        finish();
+
     }
 }
