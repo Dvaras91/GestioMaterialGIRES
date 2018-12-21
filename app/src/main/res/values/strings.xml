@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Gestio Material GIRES</string>
+    <string name="Comandesret">Comandes per retornar</string>
+    <string name="Comandesper">Comandes per preparar</string>
+    <string name="Btnbuscar">CERCAR</string>
+    <string name="Confirmar">Confirmar</string>
+    <string name="Borrar">BORRAR</string>
+    <string name="LlistaMaterial">Llistat de material:</string>
+</resources>
