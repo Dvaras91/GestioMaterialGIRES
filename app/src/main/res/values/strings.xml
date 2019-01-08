@@ -6,4 +6,6 @@
     <string name="Confirmar">Confirmar</string>
     <string name="Borrar">BORRAR</string>
     <string name="LlistaMaterial">Llistat de material:</string>
+    <string name="Retorncomanda">Comanda Entregada</string>
+    <string name="BotoEnrere">Enrere</string>
 </resources>

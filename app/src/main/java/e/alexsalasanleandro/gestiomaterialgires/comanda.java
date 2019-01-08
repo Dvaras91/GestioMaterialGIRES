@@ -18,6 +18,7 @@ public class comanda {
         //this.entrega = false;
     }
 
+
     public String getId() {
         return id;
     }

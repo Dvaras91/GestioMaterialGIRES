@@ -43,8 +43,9 @@ public class ImportantUserActivity extends AppCompatActivity {
 
         //Conectar amb firebase
         refreshListPrep();
+        refreshListRet();
 
-        db.collection( "Comandas" ).whereEqualTo( "entrega",true ).addSnapshotListener( this, new EventListener<QuerySnapshot>() {
+       /* db.collection( "Comandas" ).whereEqualTo( "entrega",true ).addSnapshotListener( this, new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
                 if (e!=null){
@@ -59,7 +60,7 @@ public class ImportantUserActivity extends AppCompatActivity {
                 }
                 adapter.notifyDataSetChanged();
             }
-        } );
+        } );*/
 
         list_return = new ArrayList<comanda>();
         //list_return.add(new comanda( "Forat Mico" ));
@@ -143,6 +144,12 @@ public class ImportantUserActivity extends AppCompatActivity {
                     refreshListPrep();
                     //list_prep.get( list_prep.size()-1 ).setData( fecha );
                 }
+            case COMANDA:
+                if ((resultCode==RESULT_OK)){
+                    refreshListPrep();
+                    refreshListRet();
+
+                }
                 break;
 
 
@@ -161,6 +168,8 @@ public class ImportantUserActivity extends AppCompatActivity {
         Intent intent = new Intent(this,Viewitemscomanda.class); //S' ha de canviar la pantalla a la que volem que vagi
         intent.putExtra("id", C.getId());
         intent.putExtra("name",C.getName());
+        intent.putExtra("data",C.getData());
+        intent.putExtra("usuari",C.getUsuari());
         startActivityForResult(intent,COMANDA);
     }
     public void refreshListPrep (){
@@ -184,5 +193,24 @@ public class ImportantUserActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void refreshListRet (){
+        db.collection( "Comandas" ).whereEqualTo( "entrega",true ).addSnapshotListener( this, new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+                if (e!=null){
+                    Log.e( "GestioMaterialGIRES","Firestore Error: "+e.toString() );
+                    return;
+                }
+                list_return.clear();
+                for (DocumentSnapshot doc: documentSnapshots){
+                    comanda c = new comanda( doc.getString( "name" ),doc.getString( "usuari" ),doc.getString( "data" ) );
+                    c.setId( doc.getId() );
+                    list_return.add( c );
+                }
+                adapter.notifyDataSetChanged();
+            }
+        } );
     }
 }
