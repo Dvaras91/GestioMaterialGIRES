@@ -1,6 +1,8 @@
 package e.alexsalasanleandro.gestiomaterialgires;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -171,5 +173,26 @@ public class EditCommand extends AppCompatActivity {
         }); //FALTA POSAR AIXO PERQUE SINO DONA UN ERROR AL TORNAR A ENTRAR
 
 
+    }
+
+    @Override
+    public void onBackPressed(){
+
+        AlertDialog.Builder builder;
+        builder = new AlertDialog.Builder(this);
+        builder.setMessage("¿Estás seguro que deseas ir para atrás?");
+        builder.setTitle("Atención");
+        builder.setPositiveButton("Si", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                EditCommand.super.onBackPressed();
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        builder.show();
     }
 }
