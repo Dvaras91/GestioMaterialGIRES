@@ -3,42 +3,32 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="14dp">
+    android:layout_height="wrap_content">
+
 
     <CheckBox
         android:id="@+id/check_item"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="?attr/listPreferredItemHeight"
-        android:layout_marginTop="8dp"
-        android:paddingLeft="8dp"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Peu de gat"
-        android:clickable="false"
-        android:focusable="false"/>
-
-    <EditText
-        android:id="@+id/txt_numberitem"
-        android:layout_width="67dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="4dp"
-        android:ems="10"
-        android:inputType="number"
-        app:layout_constraintBottom_toBottomOf="@+id/check_item"
-        app:layout_constraintEnd_toEndOf="@+id/check_item"
-        app:layout_constraintHorizontal_bias="0.973"
+        android:clickable="false"
+        android:focusable="false"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/txt_quantitat"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/check_item"
-        android:clickable="true"
-        android:focusable="true"
-        />
+        tools:text="Neopreno" />
 
+    <TextView
+        android:id="@+id/txt_quantitat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:textSize="20sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/check_item"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="1" />
 </android.support.constraint.ConstraintLayout>

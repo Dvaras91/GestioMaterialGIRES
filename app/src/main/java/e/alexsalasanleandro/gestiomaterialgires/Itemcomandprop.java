@@ -1,15 +1,20 @@
 package e.alexsalasanleandro.gestiomaterialgires;
 
 public class Itemcomandprop {
-    private String text;
+    private String text,id;
     private boolean checked;
-    private int numlloguer, numtotal;
+    private int numlloguer, numtotal,precio;
 
     public Itemcomandprop(String text) {
         this.text = text;
         this.checked = false;
         this.numlloguer =1;
         this.numtotal=1;
+    }
+
+    public Itemcomandprop(String text, String id) {
+        this.text = text;
+        this.id = id;
     }
 
     public Itemcomandprop(String text, boolean checked) {
@@ -65,5 +70,21 @@ public class Itemcomandprop {
 
     public void setNumtotal(int numtotal) {
         this.numtotal = numtotal;
+    }
+
+    public int getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(int precio) {
+        this.precio = precio;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

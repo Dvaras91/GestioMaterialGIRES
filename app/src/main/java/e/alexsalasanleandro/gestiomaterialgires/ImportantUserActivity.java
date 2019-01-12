@@ -84,7 +84,7 @@ public class ImportantUserActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText( ImportantUserActivity.this,String.format( list_return.get(i).name ),Toast.LENGTH_SHORT ).show();
-                goToComnandaItems(list_return.get(i));
+                goToComnandaItems(list_return.get(i),true);
 
 
             }
@@ -93,7 +93,7 @@ public class ImportantUserActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Toast.makeText( ImportantUserActivity.this,String.format( list_prep.get(i).name ),Toast.LENGTH_SHORT ).show();
-                goToComnandaItems(list_prep.get(i));
+                goToComnandaItems(list_prep.get(i),false);
             }
         } );
 
@@ -164,12 +164,13 @@ public class ImportantUserActivity extends AppCompatActivity {
         startActivityForResult(intent,SEARCH);
 
     }
-    public void goToComnandaItems (comanda C){
+    public void goToComnandaItems (comanda C, boolean entrega){
         Intent intent = new Intent(this,Viewitemscomanda.class); //S' ha de canviar la pantalla a la que volem que vagi
         intent.putExtra("id", C.getId());
         intent.putExtra("name",C.getName());
         intent.putExtra("data",C.getData());
         intent.putExtra("usuari",C.getUsuari());
+        intent.putExtra("entrega",entrega);
         startActivityForResult(intent,COMANDA);
     }
     public void refreshListPrep (){

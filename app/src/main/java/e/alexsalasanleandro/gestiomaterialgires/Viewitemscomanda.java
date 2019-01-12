@@ -6,7 +6,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -16,6 +20,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,13 +29,17 @@ import java.util.Map;
 public class Viewitemscomanda extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private AdaptListMaterial adapter;
+    private ComandListAdapter adapter;
     private ArrayList<Itemcomandprop> list_items;
     String id,name,usuari,data;
+    boolean entrega;
     private static final String ENTREGA = "entrega";
     private static final String NAME = "name";
     private static final String USUARI = "usuari";
     private static final String DATA = "data";
+    private static final String NOMBRE = "nombre";
+    private static final String CANTIDAD = "cantidad";
+    private static final String PRECIOITEM = "precio";
     ListView List_items;
 
     @Override
@@ -43,6 +52,14 @@ public class Viewitemscomanda extends AppCompatActivity {
             name = intent.getStringExtra("name");
             usuari = intent.getStringExtra("usuari");
             data = intent.getStringExtra("data");
+            entrega = intent.getBooleanExtra("entrega",false);
+
+        }
+        Button btn_entrega = findViewById(R.id.btn_retornada);
+        if (entrega){
+            btn_entrega.setText("RETORNAR");
+        }else {
+            btn_entrega.setText("ENTREGADA");
 
         }
         // NO FUNCIONA:
@@ -56,7 +73,10 @@ public class Viewitemscomanda extends AppCompatActivity {
                 }
                 list_items.clear();
                 for (DocumentSnapshot doc: documentSnapshots){
-                    list_items.add(new Itemcomandprop(doc.getString("nombre")));
+                    Itemcomandprop item = new Itemcomandprop(doc.getString("nombre"));
+                    item.setId(doc.getId());
+                    list_items.add(item);
+
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -64,18 +84,41 @@ public class Viewitemscomanda extends AppCompatActivity {
 
         list_items = new ArrayList<Itemcomandprop>();
         List_items = findViewById(R.id.list_itemcom);
-        adapter = new AdaptListMaterial(this,R.layout.activity_viewitemscomanda,list_items);
+        adapter = new ComandListAdapter(this,R.layout.activity_viewitemscomanda,list_items);
         List_items.setAdapter(adapter);
+        List_items.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                list_items.get(position).toggleChecked();
+                adapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
     public void returnComanda(View view) {
         DocumentReference comRef = db.collection( "Comandas" ).document( id );
+        WriteBatch batch = db.batch();
         Map<String,Object> modificar = new HashMap<>();
         modificar.put(ENTREGA,true);
         modificar.put(DATA,data);
         modificar.put(NAME,name);
         modificar.put(USUARI,usuari);
-        comRef.set(modificar).addOnSuccessListener(new OnSuccessListener<Void>() {
+        batch.set(comRef,modificar);
+        //DocumentReference Itemref = comRef.collection("items").document();
+        //Map<String,Object> items = new HashMap<>();
+        for (int d = 0;d<list_items.size();d++){
+            if (!list_items.get(d).isChecked()){
+                DocumentReference Itemref = comRef.collection("items").document(list_items.get(d).getId());
+                /*Map<String,Object> items = new HashMap<>();
+                items.put(NOMBRE,list_items.get(d).getText());
+                items.put(CANTIDAD,list_items.get(d).getNumtotal());
+                items.put(PRECIOITEM,list_items.get(d).getPrecio());
+                batch.set(comRef.collection("items").document(), items);*/
+                batch.delete(Itemref);
+            }
+        }
+        batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Intent data = new Intent();
@@ -85,12 +128,16 @@ public class Viewitemscomanda extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.e("GestioMaterialGires","Error Firestore: "+e.toString());
+                Toast.makeText(Viewitemscomanda.this,"Error!",Toast.LENGTH_SHORT).show();
+                Log.d("ERROR",e.toString());
             }
         });
-
-
     }
+
+
+
+
+
 
     public void returnImportantUser(View view) {
         finish();

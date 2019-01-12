@@ -27,12 +27,12 @@ public class ComandListAdapter extends ArrayAdapter<Itemcomandprop> {
            result = inflater.inflate( R.layout.itemedit,null );
        }
        CheckBox item_comand = (CheckBox) result.findViewById( R.id.check_item );
-       EditText numberitem = (EditText) result.findViewById( R.id.txt_numberitem );
+       TextView numberitem = (TextView) result.findViewById( R.id.txt_quantitat );
+
        Itemcomandprop item = getItem( position );
        item_comand.setText( item.getText() );
        item_comand.setChecked( item.isChecked() );
-       int number = 1;
-       //numberitem.setText( "2" );
+       numberitem.setText(Integer.toString(item.getNumlloguer()));
        return result;
     }
 }

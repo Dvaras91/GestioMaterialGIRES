@@ -143,7 +143,7 @@ public class EditCommand extends AppCompatActivity {
 
         WriteBatch batch = db.batch();
 
-        DocumentReference comRef = db.collection( "Comandas" ).document( nomcom );
+        DocumentReference comRef = db.collection( "Comandas" ).document(  );
 
         Map<String,Object> comand = new HashMap<>(  );
         comand.put( USUARI,"paco" );
