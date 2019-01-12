@@ -66,7 +66,6 @@ public class Viewitemscomanda extends AppCompatActivity {
         List_items = findViewById(R.id.list_itemcom);
         adapter = new AdaptListMaterial(this,R.layout.activity_viewitemscomanda,list_items);
         List_items.setAdapter(adapter);
-
     }
 
     public void returnComanda(View view) {

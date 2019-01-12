@@ -60,7 +60,7 @@ public class EditCommand extends AppCompatActivity {
         Titulcomanda.setText("Nom de la comanda: "+nomcom);
         list_material = findViewById( R.id.list_material );
         listmaterial = new ArrayList<>(  );
-        adapter = new ComandListAdapter( this,R.layout.itemedit,listmaterial );
+        adapter = new ComandListAdapter( this,R.layout.itemllistmaterial,listmaterial );
 
         list_material.setAdapter( adapter );
 
