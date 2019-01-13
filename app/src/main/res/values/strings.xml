@@ -8,4 +8,5 @@
     <string name="LlistaMaterial">Llistat de material:</string>
     <string name="Retorncomanda">Comanda Entregada</string>
     <string name="BotoEnrere">Enrere</string>
+    <string name="NameComanda">Nom de la comanda:</string>
 </resources>

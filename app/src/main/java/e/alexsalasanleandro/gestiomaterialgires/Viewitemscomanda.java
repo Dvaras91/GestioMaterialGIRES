@@ -41,6 +41,7 @@ public class Viewitemscomanda extends AppCompatActivity {
     private static final String CANTIDAD = "cantidad";
     private static final String PRECIOITEM = "precio";
     ListView List_items;
+    TextView Infocomanda;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +85,8 @@ public class Viewitemscomanda extends AppCompatActivity {
 
         list_items = new ArrayList<Itemcomandprop>();
         List_items = findViewById(R.id.list_itemcom);
+        Infocomanda = findViewById(R.id.lbl_namecomanda);
+        Infocomanda.setText(name+"/ Uusari: "+usuari);
         adapter = new ComandListAdapter(this,R.layout.activity_viewitemscomanda,list_items);
         List_items.setAdapter(adapter);
         List_items.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -99,39 +102,71 @@ public class Viewitemscomanda extends AppCompatActivity {
     public void returnComanda(View view) {
         DocumentReference comRef = db.collection( "Comandas" ).document( id );
         WriteBatch batch = db.batch();
-        Map<String,Object> modificar = new HashMap<>();
-        modificar.put(ENTREGA,true);
-        modificar.put(DATA,data);
-        modificar.put(NAME,name);
-        modificar.put(USUARI,usuari);
-        batch.set(comRef,modificar);
-        //DocumentReference Itemref = comRef.collection("items").document();
-        //Map<String,Object> items = new HashMap<>();
-        for (int d = 0;d<list_items.size();d++){
-            if (!list_items.get(d).isChecked()){
-                DocumentReference Itemref = comRef.collection("items").document(list_items.get(d).getId());
+        if (!entrega){ //Posar la comanda com a entregada. Nomès puja els elements marcats
+
+            Map<String,Object> modificar = new HashMap<>();
+            modificar.put(ENTREGA,true);
+            modificar.put(DATA,data);
+            modificar.put(NAME,name);
+            modificar.put(USUARI,usuari);
+            batch.set(comRef,modificar);
+            //DocumentReference Itemref = comRef.collection("items").document();
+            //Map<String,Object> items = new HashMap<>();
+            for (int d = 0;d<list_items.size();d++){
+                if (!list_items.get(d).isChecked()){
+                    DocumentReference Itemref = comRef.collection("items").document(list_items.get(d).getId());
                 /*Map<String,Object> items = new HashMap<>();
                 items.put(NOMBRE,list_items.get(d).getText());
                 items.put(CANTIDAD,list_items.get(d).getNumtotal());
                 items.put(PRECIOITEM,list_items.get(d).getPrecio());
                 batch.set(comRef.collection("items").document(), items);*/
-                batch.delete(Itemref);
+                    batch.delete(Itemref);
+                }
             }
+            batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Intent data = new Intent();
+                    setResult(RESULT_OK,data);
+                    finish();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(Viewitemscomanda.this,"Error!",Toast.LENGTH_SHORT).show();
+                    Log.d("ERROR",e.toString());
+                }
+            });
         }
-        batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Intent data = new Intent();
-                setResult(RESULT_OK,data);
-                finish();
+        else { //L' usuari a retornat la comanda, el·liminar-la en cas que es retornint tots els elements/modificar - la si falta algun element per retornar
+            int count = 0;
+            for (int d= 0;d<list_items.size();d++){ //El·liminar de la comanda objectes marcats
+                if (list_items.get(d).isChecked()){
+                    DocumentReference Itemref = comRef.collection("items").document(list_items.get(d).getId());
+                    batch.delete(Itemref);
+                    count = count + 1;
+                }
+
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(Viewitemscomanda.this,"Error!",Toast.LENGTH_SHORT).show();
-                Log.d("ERROR",e.toString());
+            if (count==list_items.size()){ //Si tots els objectes són entregats, el·liminem la comanda
+                batch.delete(comRef);
             }
-        });
+            batch.commit().addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Intent data = new Intent();
+                    setResult(RESULT_OK,data);
+                    finish();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(Viewitemscomanda.this,"Error!",Toast.LENGTH_SHORT).show();
+                    Log.d("ERROR",e.toString());
+                }
+            });
+        }
+
     }
 
 
