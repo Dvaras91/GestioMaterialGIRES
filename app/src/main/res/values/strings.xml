@@ -9,4 +9,11 @@
     <string name="Retorncomanda">Comanda Entregada</string>
     <string name="BotoEnrere">Enrere</string>
     <string name="NameComanda">Nom de la comanda:</string>
+    <string name="NomIdentificacio">Nom:</string>
+    <string name="Llicencia">Llicència:</string>
+    <string name="Cursos">Cursos:</string>
+    <string name="Ninguna">Cap</string>
+    <string name="normativa">Normativa</string>
+    <string name="usuari">Usuaris</string>
+    />
 </resources>
